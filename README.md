@@ -1,5 +1,7 @@
 # ESP32 Wheatstone Köprülü Hassas Terazi
 
+[English build guide: ESP32 Wheatstone Bridge Precision Scale](README.en.md)
+
 5 kg nominal kapasiteli bir yük hücresi, HX711 ve ESP32 kullanan Ölçme ve Enstrümantasyon dersi prototipi. ESP32 ölçümü 20×4 I²C LCD'de gösterir ve kendi yerel Wi-Fi ağı üzerinden tablet tarayıcısına canlı ölçüm ve grafik sunar. İnternet gerekmez.
 
 - **Donanım, pinler ve kalibrasyon:** [Firmware rehberi](firmware/README.md)
