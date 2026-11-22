@@ -1,0 +1,86 @@
+=== Hassas Terazi Firmware Host Behavioral Suite ===
+[PASS] setup_non_blocking_and_routes: Serial.begin(115200) called once
+[PASS] setup_non_blocking_and_routes: HX711 configured on DOUT=16, SCK=4, GAIN=128
+[PASS] setup_non_blocking_and_routes: setup() never blocks on HX711 read/read_average/tare
+[PASS] setup_non_blocking_and_routes: Tare button GPIO27 configured as INPUT_PULLUP
+[PASS] setup_non_blocking_and_routes: Wire.begin(21, 22) configured for I2C
+[PASS] setup_non_blocking_and_routes: 20x4 LCD initialized with Wire
+[PASS] setup_non_blocking_and_routes: LCD uses hardware-scanned address 0x27
+[PASS] setup_non_blocking_and_routes: WiFi SoftAP started
+[PASS] setup_non_blocking_and_routes: Exactly 4 HTTP routes registered
+[PASS] setup_non_blocking_and_routes: GET / serves embedded tablet HTML from PROGMEM via send_P
+[PASS] setup_non_blocking_and_routes: GET /api/weight works without sensor and returns null grams/age with seq 0: {"grams":null,"display_grams":null,"calibrated":false,"sensor_ok":false,"seq":0,"sample_age_ms":null,"busy":true,"operation":"startup_zero","op_status":"busy","op_id":1,"error":null}
+[PASS] setup_non_blocking_and_routes: WiFi.softAP() == false logs visible AP error on Serial and never logs 'Wi-Fi AP hazir, IP: 192.168.4.1'
+[PASS] setup_non_blocking_and_routes: WiFi.softAP() == false shows AP error on LCD row 3 instead of fake IP: AP:HATA (WiFi yok)  
+[PASS] setup_non_blocking_and_routes: Hardware measurement continues normally without infinite AP retry loops when softAP fails
+[PASS] setup_non_blocking_and_routes: WiFi.mode() == false is also reported as AP error on Serial and LCD
+[PASS] nvs_startup_validation_and_negative_k: Zero scale factor in NVS treated as uncalibrated: {"grams":null,"display_grams":null,"calibrated":false,"sensor_ok":true,"seq":3,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] nvs_startup_validation_and_negative_k: NaN scale factor in NVS treated as uncalibrated: {"grams":null,"display_grams":null,"calibrated":false,"sensor_ok":true,"seq":3,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] nvs_startup_validation_and_negative_k: Infinity scale factor in NVS treated as uncalibrated: {"grams":null,"display_grams":null,"calibrated":false,"sensor_ok":true,"seq":3,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] nvs_startup_validation_and_negative_k: Negative K (-400 counts/g) preserved and computes +250.00 g at R=0: {"grams":250.00,"display_grams":250,"calibrated":true,"sensor_ok":true,"seq":6,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Startup zero finishes after 3 samples with negative raw offset -50000
+[PASS] tare_and_calibration_flow_with_filter_isolation: Zero raw difference calibration rejected with 4xx: {"ok":false,"error":"Sifir fark: platformda bilinen yuk algilanmadi."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: known_g=0 rejected with 400
+[PASS] tare_and_calibration_flow_with_filter_isolation: known_g=-10 rejected with 400
+[PASS] tare_and_calibration_flow_with_filter_isolation: known_g=5001 (>5000g capacity) rejected with 400
+[PASS] tare_and_calibration_flow_with_filter_isolation: String known_g rejected with 400
+[PASS] tare_and_calibration_flow_with_filter_isolation: Malformed JSON rejected with 400
+[PASS] tare_and_calibration_flow_with_filter_isolation: Oversized body (>256 bytes) rejected with 413
+[PASS] tare_and_calibration_flow_with_filter_isolation: Invalid JSON number or float underflow rejected with 400 without starting op: {"known_g":01} -> {"ok":false,"error":"known_g gecerli bir RFC JSON sayisi olmalidir."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Invalid JSON number or float underflow rejected with 400 without starting op: {"known_g":1.} -> {"ok":false,"error":"known_g gecerli bir RFC JSON sayisi olmalidir."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Invalid JSON number or float underflow rejected with 400 without starting op: {"known_g":0x1p0} -> {"ok":false,"error":"JSON nesnesi beklenmeyen karakter iceriyor."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Invalid JSON number or float underflow rejected with 400 without starting op: {"known_g":.5} -> {"ok":false,"error":"known_g gecerli bir RFC JSON sayisi olmalidir."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Invalid JSON number or float underflow rejected with 400 without starting op: {"known_g":+10} -> {"ok":false,"error":"known_g gecerli bir RFC JSON sayisi olmalidir."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Invalid JSON number or float underflow rejected with 400 without starting op: {"known_g":1e} -> {"ok":false,"error":"known_g gecerli bir RFC JSON sayisi olmalidir."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Invalid JSON number or float underflow rejected with 400 without starting op: {"known_g":1e+} -> {"ok":false,"error":"known_g gecerli bir RFC JSON sayisi olmalidir."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Invalid JSON number or float underflow rejected with 400 without starting op: {"known_g":1e-50} -> {"ok":false,"error":"known_g float hassasiyetinde 0 ile 5000 g arasinda pozitif olmalidir."}
+[PASS] tare_and_calibration_flow_with_filter_isolation: POST /api/calibrate accepts valid scientific JSON number 1e3 with whitespace and returns 202 Accepted: {"ok":true,"status":"accepted","operation":"calibrate","busy":true,"op_id":2}
+[PASS] tare_and_calibration_flow_with_filter_isolation: While collecting calibration samples, snapshot is busy and grams is null
+[PASS] tare_and_calibration_flow_with_filter_isolation: Calibration completes with exact 1000.00 g (no old filter contamination) and negative K saved: {"grams":1000.00,"display_grams":1000,"calibrated":true,"sensor_ok":true,"seq":7,"sample_age_ms":0,"busy":false,"operation":"calibrate","op_status":"completed","op_id":2,"error":null}
+[PASS] tare_and_calibration_flow_with_filter_isolation: NVS written exactly once with K = -400.0 counts/g
+[PASS] tare_and_calibration_flow_with_filter_isolation: POST /api/tare returns 202 Accepted
+[PASS] tare_and_calibration_flow_with_filter_isolation: After tare at -450000, net weight is 0.00 g: {"grams":0.00,"display_grams":0,"calibrated":true,"sensor_ok":true,"seq":18,"sample_age_ms":0,"busy":false,"operation":"tare","op_status":"completed","op_id":3,"error":null}
+[PASS] tare_and_calibration_flow_with_filter_isolation: Tare never writes to NVS flash
+[PASS] tare_and_calibration_flow_with_filter_isolation: Removing tared 1000g load yields negative net weight -1000.00 g: {"grams":-1000.00,"display_grams":-1000,"calibrated":true,"sensor_ok":true,"seq":21,"sample_age_ms":0,"busy":false,"operation":"tare","op_status":"completed","op_id":3,"error":null}
+[PASS] nvs_write_failure_preserves_previous_calibration: Initial calibrated weight is 500.00 g with K=200
+[PASS] nvs_write_failure_preserves_previous_calibration: Calibration request accepted for sampling
+[PASS] nvs_write_failure_preserves_previous_calibration: NVS write failure reports op_status=failed and preserves previous K=200 (500.00 g): {"grams":500.00,"display_grams":500,"calibrated":true,"sensor_ok":true,"seq":9,"sample_age_ms":0,"busy":false,"operation":"calibrate","op_status":"failed","op_id":2,"error":"NVS yazma hatasi; onceki kalibrasyon korundu."}
+[PASS] physical_button_debounce_and_edge_trigger: Short 20ms button glitch ignored by debounce
+[PASS] physical_button_debounce_and_edge_trigger: Holding the button does not sample or start tare
+[PASS] physical_button_debounce_and_edge_trigger: Transient samples in the first 200 ms after stable release are discarded
+[PASS] physical_button_debounce_and_edge_trigger: Tare waits for more than three settled samples
+[PASS] physical_button_debounce_and_edge_trigger: Physical tare runs once and trims a high and a low outlier
+[PASS] physical_button_debounce_and_edge_trigger: Unloading a tared load still produces a signed negative measurement
+[PASS] saturation_timeout_recovery_and_millis_wrap: Valid measurement across millis() 32-bit wrap-around with seq=6: {"grams":100.00,"display_grams":100,"calibrated":true,"sensor_ok":true,"seq":6,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] saturation_timeout_recovery_and_millis_wrap: seq does not increment without new sample; sample_age_ms tracks 400 ms: {"grams":100.00,"display_grams":100,"calibrated":true,"sensor_ok":true,"seq":6,"sample_age_ms":400,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] saturation_timeout_recovery_and_millis_wrap: Sensor timeout at 1000ms sets sensor_ok=false and grams=null: {"grams":null,"display_grams":null,"calibrated":true,"sensor_ok":false,"seq":6,"sample_age_ms":1000,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":"HX711 sensor zaman asimi; baglantiyi kontrol edin."}
+[PASS] saturation_timeout_recovery_and_millis_wrap: First sample after timeout recovery reflects only new epoch (200.00 g, no 133.33 g old filter mix): {"grams":200.00,"display_grams":200,"calibrated":true,"sensor_ok":true,"seq":7,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] saturation_timeout_recovery_and_millis_wrap: First sample arriving immediately after >=1000ms stale gap clears old filter and reports 300.00 g: {"grams":300.00,"display_grams":300,"calibrated":true,"sensor_ok":true,"seq":8,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] saturation_timeout_recovery_and_millis_wrap: Tare started before timeout test
+[PASS] saturation_timeout_recovery_and_millis_wrap: Timeout during active tare fails the operation cleanly: {"grams":null,"display_grams":null,"calibrated":true,"sensor_ok":false,"seq":9,"sample_age_ms":1000,"busy":false,"operation":"tare","op_status":"failed","op_id":2,"error":"HX711 sensor zaman asimi; baglantiyi kontrol edin."}
+[PASS] saturation_timeout_recovery_and_millis_wrap: Sensor automatically recovers and resumes valid output: {"grams":200.00,"display_grams":200,"calibrated":true,"sensor_ok":true,"seq":12,"sample_age_ms":0,"busy":false,"operation":"tare","op_status":"failed","op_id":2,"error":"HX711 sensor zaman asimi; baglantiyi kontrol edin."}
+[PASS] saturation_timeout_recovery_and_millis_wrap: ADC saturation value (8388607) flagged as error without incrementing seq: {"grams":null,"display_grams":null,"calibrated":true,"sensor_ok":false,"seq":12,"sample_age_ms":100,"busy":false,"operation":"tare","op_status":"failed","op_id":2,"error":"HX711 ADC doyma (saturasyon) veya gecersiz veri hatasi."}
+[PASS] lcd_absence_and_flicker_free_update: Missing LCD does not block measurement or HTTP API and skips I2C print calls
+[PASS] lcd_absence_and_flicker_free_update: Connected LCD updates rows without calling lcd.clear() in loop
+[PASS] lcd_absence_and_flicker_free_update: Unchanged LCD rows are not redundantly reprinted
+[PASS] whole_gram_lcd_display: LCD rounds 261.50 g up to 262 g: Net:       262 g    
+[PASS] whole_gram_lcd_display: HTTP measurement retains fractional grams
+[PASS] whole_gram_lcd_display: LCD shows 0 g without a negative sign near zero
+[PASS] whole_gram_lcd_display: LCD shows unsigned zero in kg and N:  0.000kg    0.00N   
+[PASS] whole_gram_lcd_display: LCD preserves the sign of nonzero negative net weight: Net:      -216 g     / -0.216kg   -2.12N   
+[PASS] whole_gram_lcd_display: Signed net measurement is preserved for the API
+[PASS] serial_measurement_diagnostics: A fresh raw sample is visible during startup, without fake grams
+[PASS] serial_measurement_diagnostics: Serial exposes the signed net value before display rounding
+[PASS] serial_measurement_diagnostics: No fresh sample means no duplicate diagnostic row
+[PASS] shared_gram_hysteresis: Net:        68 g    {"grams":67.68,"display_grams":68,"calibrated":true,"sensor_ok":true,"seq":7,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] shared_gram_hysteresis: Net:        68 g    {"grams":67.36,"display_grams":68,"calibrated":true,"sensor_ok":true,"seq":11,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] shared_gram_hysteresis: LCD kg and N derive from stable 68 g:  0.068kg    0.67N   
+[PASS] shared_gram_hysteresis: Raw net API precision is intact
+[PASS] shared_gram_hysteresis: Net:        67 g    {"grams":67.29,"display_grams":67,"calibrated":true,"sensor_ok":true,"seq":15,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] shared_gram_hysteresis: Net:        67 g    {"grams":67.68,"display_grams":67,"calibrated":true,"sensor_ok":true,"seq":19,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] shared_gram_hysteresis: Net:        68 g    {"grams":67.71,"display_grams":68,"calibrated":true,"sensor_ok":true,"seq":23,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] shared_gram_hysteresis: Net:       -68 g    {"grams":-68.00,"display_grams":-68,"calibrated":true,"sensor_ok":true,"seq":27,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] shared_gram_hysteresis: Net:         0 g    {"grams":0.00,"display_grams":0,"calibrated":true,"sensor_ok":true,"seq":31,"sample_age_ms":0,"busy":false,"operation":"startup_zero","op_status":"completed","op_id":1,"error":null}
+[PASS] shared_gram_hysteresis: Tare starts
+[PASS] shared_gram_hysteresis: No stale display weight during tare
+RESULT: PASSED (all firmware behavioral checks succeeded)

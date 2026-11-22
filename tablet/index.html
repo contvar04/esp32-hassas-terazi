@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hassas terazi — Ölçüm ekranı</title>
+  <style>
+    /* Açık izleme yüzeyi, okunaklı değer ve dokunmatik kontroller. */
+    :root {
+      font-family: 'Segoe UI', sans-serif;
+      color: #1a2928;
+      background: #f3f4ef;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+    }
+    [hidden] {
+      display: none !important;
+    }
+    button, input, select {
+      font: inherit;
+    }
+    button, select, input[type=number] {
+      min-height: 44px;
+      border: 1px solid #a6b4ae;
+      border-radius: 5px;
+      background: white;
+      color: #203433;
+      padding: 0 14px;
+    }
+    button {
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover {
+      border-color: #26766f;
+      background: #edf6f4;
+    }
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+    :focus-visible {
+      outline: 3px solid #17756b;
+      outline-offset: 3px;
+    }
+    header {
+      background: #fff;
+      border-bottom: 1px solid #d7dfd9;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .brand small {
+      display: block;
+      color: #536864;
+      font-size: .75rem;
+      font-weight: 400;
+      margin-top: 3px;
+    }
+    .demo {
+      font-weight: 700;
+      color: #694b14;
+      background: #fff4d7;
+      border: 1px solid #d9c389;
+      padding: 9px 13px;
+      border-radius: 5px;
+    }
+    .live-badge {
+      font-weight: 700;
+      color: #13534c;
+      background: #e3f4f1;
+      border: 1px solid #8ac4bc;
+      padding: 9px 13px;
+      border-radius: 5px;
+    }
+    main {
+      max-width: 1500px;
+      margin: auto;
+      padding: 28px;
+    }
+    .heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-size: 1.35rem;
+      margin: 0;
+    }
+    h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+    .caption {
+      color: #526662;
+      font-size: .87rem;
+      margin: 6px 0 0;
+    }
+    .status {
+      color: #21645d;
+      font-weight: 600;
+    }
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(300px, .8fr) minmax(420px, 1.4fr);
+      gap: 18px;
+    }
+    .panel {
+      background: #fff;
+      border: 1px solid #d8e0da;
+      border-radius: 8px;
+      padding: 24px;
+    }
+    .measure {
+      display: flex;
+      flex-direction: column;
+      min-height: 330px;
+    }
+    .eyebrow {
+      font-size: .78rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #516863;
+      font-weight: 700;
+    }
+    .reading {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin: 35px 0 8px;
+    }
+    .reading output {
+      font-family: Consolas, 'Courier New', monospace;
+      font-weight: 600;
+      font-size: clamp(2.4rem, 5.2vw, 5rem);
+      letter-spacing: -.055em;
+      overflow-wrap: anywhere;
+    }
+    .unit-label {
+      font-size: 1.35rem;
+      color: #526662;
+    }
+    .actions {
+      margin-top: auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .primary {
+      background: #176c63;
+      color: white;
+      border-color: #176c63;
+    }
+    .primary:hover {
+      background: #12584f;
+      color: white;
+    }
+    .chart-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .chart-wrap {
+      height: 255px;
+      margin-top: 20px;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .controls {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .controls.single-col {
+      grid-template-columns: 1fr;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 17px 0;
+    }
+    .slider-row input {
+      flex: 1;
+      min-width: 0;
+      accent-color: #176c63;
+      height: 44px;
+    }
+    .slider-row output {
+      min-width: 78px;
+      text-align: right;
+      font-family: Consolas, monospace;
+      font-weight: 700;
+    }
+    .control-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .state-row {
+      margin-top: 18px;
+    }
+    details {
+      border-top: 1px solid #d8e0da;
+      margin-top: 20px;
+      padding-top: 16px;
+    }
+    details.standalone {
+      border-top: none;
+      margin-top: 0;
+      padding-top: 0;
+    }
+    summary {
+      cursor: pointer;
+      min-height: 44px;
+      font-weight: 600;
+    }
+    details p {
+      font-size: .9rem;
+      color: #526662;
+      line-height: 1.5;
+    }
+    input[type=number] {
+      width: 160px;
+      max-width: 100%;
+    }
+    .feedback {
+      min-height: 1.4em;
+      color: #73351f;
+      font-size: .88rem;
+    }
+    footer {
+      color: #536864;
+      font-size: .8rem;
+      margin-top: 22px;
+      line-height: 1.5;
+    }
+    /* Portrede tek sütun; hareket tercihine saygı. */
+    @media (max-width: 850px) {
+      main {
+        padding: 20px 16px;
+      }
+      .workspace, .controls {
+        grid-template-columns: 1fr;
+      }
+      .measure {
+        min-height: 250px;
+      }
+      .reading {
+        margin: 25px 0;
+      }
+      .chart-wrap {
+        height: 230px;
+      }
+      header {
+        padding: 16px;
+      }
+      .heading {
+        align-items: start;
+        flex-direction: column;
+        gap: 8px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      HASSAS TERAZİ
+      <small id="brandSub">Ölçüm izleme / çevrimdışı</small>
+    </div>
+    <div id="modeBadge" class="demo">Demo — gerçek ölçüm değil</div>
+  </header>
+
+  <main>
+    <div class="heading">
+      <div>
+        <h1>Ölçüm ekranı</h1>
+        <p id="pageCaption" class="caption">Simüle edilmiş yük ve net ağırlık</p>
+      </div>
+      <span id="status" class="status" role="status">Demo verisi</span>
+    </div>
+
+    <div class="workspace">
+      <section class="panel measure" aria-labelledby="measure-title">
+        <h2 id="measure-title" class="eyebrow">Net ağırlık</h2>
+        <div class="reading">
+          <output id="weight">0,0</output>
+          <span class="unit-label" id="unitLabel">g</span>
+        </div>
+        <p class="caption" id="weightNote">Dara uygulanabilir</p>
+        <div class="actions">
+          <button class="primary" id="tare">Dara al</button>
+          <label for="unit">Birim</label>
+          <select id="unit">
+            <option value="g">gram (g)</option>
+            <option value="kg">kilogram (kg)</option>
+            <option value="n">Newton (N)</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="graph-title">
+        <div class="chart-head">
+          <div>
+            <h2 id="graph-title">Ağırlık geçmişi</h2>
+            <p class="caption">Net ağırlık · gram</p>
+          </div>
+          <span class="caption">Son 60 saniye</span>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="chart" role="img" aria-label="Son 60 saniyenin net ağırlık grafiği; yatay eksen zaman, dikey eksen gram"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <div id="controlsGrid" class="controls">
+      <section id="demoLoadPanel" class="panel">
+        <h2>Demo yükü</h2>
+        <p class="caption">Fiziksel yükü simüle eder; sensörü kontrol etmez.</p>
+        <div class="slider-row">
+          <label for="load">Yük</label>
+          <input id="load" type="range" min="0" max="5000" step="10" value="0">
+          <output id="loadValue" for="load">0 g</output>
+        </div>
+        <div class="row">
+          <button data-load="0">Boş</button>
+          <button data-load="500">500 g</button>
+          <button data-load="1000">1000 g</button>
+        </div>
+      </section>
+
+      <section id="calibrationPanel" class="panel">
+        <div id="demoStateSection">
+          <h2>Demo durumu</h2>
+          <div class="state-row">
+            <label class="control-label" for="state">Veri durumu</label>
+            <select id="state">
+              <option value="normal">Normal</option>
+              <option value="yok">Sensör verisi yok</option>
+              <option value="kopuk">Bağlantı kesik</option>
+            </select>
+          </div>
+        </div>
+
+        <details id="calibrationDetails">
+          <summary id="calibrationSummary">Demo kalibrasyonu</summary>
+          <p id="calibrationHelp">Teraziyi önce boşaltın. Sonra bilinen kütleyi demo yükü olarak seçip değerini girin. Katsayı sadece bu sayfada değişir; ESP32’ye kaydedilmez.</p>
+          <label class="control-label" for="known">Bilinen kütle (g)</label>
+          <div class="row">
+            <input type="number" id="known" min="0" max="5000" step="any" inputmode="decimal">
+            <button id="calibrate">Kalibre et</button>
+          </div>
+          <p id="feedback" class="feedback" role="status"></p>
+        </details>
+      </section>
+    </div>
+
+    <footer id="footerNote">Yalnızca gösterim amaçlıdır. Hiçbir cihaza bağlanmaz; sayfa yenilendiğinde demo ayarları sıfırlanır.</footer>
+  </main>
+
+  <script>
+    /*
+     * ============================================================================
+     * BÖLÜM 1: SAF HESAPLAMA VE DOĞRULAMA ÇEKİRDEĞİ (TeraziCore)
+     * ----------------------------------------------------------------------------
+     * DOM olmadan Node.js vm ortamında da doğrudan yüklenir ve test edilir.
+     *
+     * ÖNEMLİ BİRİM AYRIMI:
+     * - Demo modunda (file://): TeraziCore.mass / tare / calibrate fonksiyonları
+     *   sayfa içi simülasyon için "gram / sayım" (factor) birimini kullanır:
+     *   Net gram = (ham - boş_ham) * factor - dara.
+     * - Canlı modda (http:// veya https://): ESP32 firmware'i kendi içinde
+     *   K = "sayım / gram" katsayısıyla m = (R - R0) / K hesabını yapar ve
+     *   GET /api/weight içinde doğrudan net gram ("grams") değerini gönderir.
+     *   Canlı modda demo katsayısı (factor) KESİNLİKLE tekrar uygulanmaz; yalnızca
+     *   TeraziCore.convert(grams) ile g / kg / N birim dönüşümü yapılır.
+     * ============================================================================
+     */
+    var TeraziCore = {
+      // Sabit sınırlar: 5 kg yük hücresi üst kapasitesi (gram) ve örnek bayatlama eşiği (ms)
+      MAX_CAPACITY_G: 5000,
+      STALE_SAMPLE_MAX_MS: 1500,
+      POLL_INTERVAL_MS: 500,
+      FETCH_TIMEOUT_MS: 1500,
+
+      // Gram değerini gram (g), kilogram (kg) ve standart yerçekimi ivmesiyle Newton (N) birimine çevirir.
+      convert: g => ({
+        g,
+        kg: g / 1000,
+        n: (g / 1000) * 9.80665
+      }),
+
+      // Yalnızca çevrimdışı DEMO simülasyonu için: (ham - sıfır) * demo_katsayısı - dara
+      mass: (raw, zero, factor, tare) => (raw - zero) * factor - tare,
+
+      // Yalnızca çevrimdışı DEMO simülasyonu için: o anki brüt kütleyi dara ofseti olarak döndürür
+      tare: (raw, zero, factor) => (raw - zero) * factor,
+
+      // Yalnızca çevrimdışı DEMO simülasyonu için: bilinen gram / ham fark (ters yönlü sensörde negatif olabilir)
+      calibrate: (known, raw, zero) => {
+        const k = Number(known);
+        const d = raw - zero;
+        const f = k / d;
+        return known === '' || !Number.isFinite(k) || k <= 0 || !Number.isFinite(d) || d === 0 || !Number.isFinite(f) || f === 0
+          ? null
+          : f;
+      },
+
+      // Demo durumu seçicisinin geçerli anahtarlarını doğrular
+      validState: s => ['normal', 'yok', 'kopuk'].includes(s),
+
+      // Grafik geçmiş dizisine yeni nokta ekler ve en fazla n eleman tutar
+      pushHistory: (h, p, n) => h.concat([p]).slice(-n),
+
+      // Sayfanın açıldığı protokole göre çalışma modunu belirler:
+      // file: protokolü DEMO modunda kalır; http: ve https: gerçek ESP32 CANLI modunda çalışır.
+      detectMode: protocol => (protocol === 'http:' || protocol === 'https:') ? 'live' : 'demo',
+
+      // Canlı kalibrasyon için girilen bilinen kütle (gram) değerini doğrular (0 < known_g <= 5000)
+      validateKnownMass: value => {
+        if (value === '' || value === null || value === undefined || typeof value === 'boolean') {
+          return null;
+        }
+        const str = String(value).trim();
+        if (str === '') return null;
+        const num = Number(str);
+        if (!Number.isFinite(num) || num <= 0 || num > TeraziCore.MAX_CAPACITY_G) {
+          return null;
+        }
+        return num;
+      },
+
+      // ESP32 GET /api/weight JSON yanıtının şema, tür ve sonluluk (finite) kurallarını denetler.
+      // NaN, Infinity, yanlış tür veya negatif sıra/yaş değerlerini kesin olarak reddeder.
+      validateSnapshot: data => {
+        if (!data || typeof data !== 'object' || Array.isArray(data)) {
+          return { valid: false, reason: 'Yanıt geçerli bir JSON nesnesi değil.' };
+        }
+        if (typeof data.calibrated !== 'boolean') {
+          return { valid: false, reason: 'calibrated alanı boolean olmalıdır.' };
+        }
+        if (typeof data.sensor_ok !== 'boolean') {
+          return { valid: false, reason: 'sensor_ok alanı boolean olmalıdır.' };
+        }
+        if (typeof data.seq !== 'number' || !Number.isFinite(data.seq) || !Number.isInteger(data.seq) || data.seq < 0) {
+          return { valid: false, reason: 'seq alanı negatif olmayan tam sayı olmalıdır.' };
+        }
+        if (data.sample_age_ms !== null && (typeof data.sample_age_ms !== 'number' || !Number.isFinite(data.sample_age_ms) || data.sample_age_ms < 0)) {
+          return { valid: false, reason: 'sample_age_ms alanı null veya negatif olmayan sonlu sayı olmalıdır.' };
+        }
+        if (data.grams !== null && (typeof data.grams !== 'number' || !Number.isFinite(data.grams))) {
+          return { valid: false, reason: 'grams alanı null veya sonlu sayı (finite number) olmalıdır.' };
+        }
+        if (data.busy !== undefined && typeof data.busy !== 'boolean') {
+          return { valid: false, reason: 'busy alanı boolean olmalıdır.' };
+        }
+        if (data.operation !== undefined && data.operation !== null && typeof data.operation !== 'string') {
+          return { valid: false, reason: 'operation alanı metin veya null olmalıdır.' };
+        }
+        if (data.op_status !== undefined && data.op_status !== null && typeof data.op_status !== 'string') {
+          return { valid: false, reason: 'op_status alanı metin veya null olmalıdır.' };
+        }
+        if (data.op_id !== undefined && (typeof data.op_id !== 'number' || !Number.isFinite(data.op_id) || !Number.isInteger(data.op_id) || data.op_id < 0)) {
+          return { valid: false, reason: 'op_id alanı negatif olmayan tam sayı olmalıdır.' };
+        }
+        if (data.error !== undefined && data.error !== null && typeof data.error !== 'string') {
+          return { valid: false, reason: 'error alanı metin veya null olmalıdır.' };
+        }
+        return { valid: true, reason: null };
+      },
+
+      // Örnek yaşının bayat (stale) olup olmadığını kontrol eder
+      isStaleSample: sampleAgeMs => {
+        return sampleAgeMs === null || typeof sampleAgeMs !== 'number' || !Number.isFinite(sampleAgeMs) || sampleAgeMs > TeraziCore.STALE_SAMPLE_MAX_MS;
+      }
+    };
+
+    /*
+     * ============================================================================
+     * BÖLÜM 2: ARAYÜZ, DEMO SİMÜLASYONU VE CANLI ESP32 İSTEMCİSİ
+     * ----------------------------------------------------------------------------
+     * - file:// ile açıldığında çevrimdışı DEMO modunu korur.
+     * - http:// ile ESP32 üzerinden açıldığında CANLI moda geçer, demo kontrollerini
+     *   gizler ve kopma durumunda asla sahte demoya otomatik dönüş yapmaz.
+     * - İstekler çakışmadan (~500 ms) sırayla yapılır, cache: 'no-store' ve
+     *   AbortController zaman aşımı uygulanır.
+     * - POST /api/tare ve POST /api/calibrate için 202 Accepted yanıtı bitmiş başarı
+     *   sayılmaz; sonraki GET /api/weight snapshot'larında işlemin tamamlanması
+     *   (completed) veya hata vermesi (failed) izlenir.
+     * ============================================================================
+     */
+    if (typeof document !== 'undefined') (() => {
+      const $ = id => document.getElementById(id);
+      const core = TeraziCore;
+      const protocol = (typeof location !== 'undefined' && location && typeof location.protocol === 'string')
+        ? location.protocol
+        : 'file:';
+      const activeMode = core.detectMode(protocol);
+
+      // Türkçe sayı biçimlendirici (ör. 1250.2 -> "1.250,2", -125.5 -> "-125,5")
+      const fmt = (n, d) => {
+        const formatter = new Intl.NumberFormat('tr-TR', {
+          minimumFractionDigits: d,
+          maximumFractionDigits: d
+        });
+        const formatted = formatter.format(n);
+        return formatted === formatter.format(-0) ? formatter.format(0) : formatted;
+      };
+
+      // Demo ve eski firmware için işareti koruyan tam gram referansı.
+      const wholeDisplayGrams = grams => Math.sign(grams) * Math.round(Math.abs(grams));
+
+      // Çevrimdışı DEMO modeli (yalnızca activeMode === 'demo' iken kullanılır)
+      const demoModel = {
+        load: 0,
+        rawZero: 10000,
+        rawPerGram: 2,
+        factor: 0.5,
+        tare: 0,
+        state: 'normal',
+        history: []
+      };
+      const demoRaw = () => demoModel.rawZero + demoModel.load * demoModel.rawPerGram;
+      const demoNet = () => core.mass(demoRaw(), demoModel.rawZero, demoModel.factor, demoModel.tare);
+      const demoLabels = {
+        normal: 'Demo verisi',
+        yok: 'Sensör verisi yok',
+        kopuk: 'Bağlantı kesik'
+      };
+
+      // Canlı ESP32 izleme durumu (testlerde incelenebilmesi için global referans da açılır)
+      const liveState = {
+        mode: activeMode,
+        statusText: 'Bağlanıyor...',
+        noteText: 'ESP32 ölçüm verisi bekleniyor...',
+        grams: null,          // Yalnızca geçerli, kalibreli ve taze örnek varsa sonlu sayı, aksi halde null
+        displayGrams: null,   // LCD ile paylaşılan ESP32 tam gram değeri
+        calibrated: false,
+        sensorOk: false,
+        deviceBusy: false,
+        lastSeq: null,        // Son işlenen fiziksel ölçüm sıra numarası
+        hadGap: false,        // Kopma/stale/hata sonrası grafikte boşluk bırakılıp bırakılmadığı
+        pollInFlight: false,
+        postInFlight: false,
+        activeGetAbort: null,
+        commandGen: 0,        // POST/GET yarışlarını engellemek için artan komut kuşağı sayacı
+        pendingOp: null,      // { type: 'tare'|'calibrate', opId: number|null }
+        history: []
+      };
+      if (typeof window !== 'undefined') {
+        window.TeraziLiveState = liveState;
+      }
+      var globalScope = (function() { return this; })() || window;
+      if (globalScope) {
+        globalScope.TeraziLiveState = liveState;
+      }
+
+      // Grafik çizimi: son 60 saniyeyi gösterir; value === null olan noktalar çizgiyi keser (gap oluşturur).
+      function drawChart(historyArray) {
+        const canvas = $('chart');
+        if (!canvas || typeof canvas.getContext !== 'function') return;
+        const rect = canvas.getBoundingClientRect();
+        const ratio = (typeof window !== 'undefined' && window.devicePixelRatio) ? window.devicePixelRatio : 1;
+        canvas.width = Math.round(rect.width * ratio);
+        canvas.height = Math.round(rect.height * ratio);
+        const c = canvas.getContext('2d');
+        if (!c) return;
+        c.scale(ratio, ratio);
+
+        const w = rect.width;
+        const h = rect.height;
+        const l = 55;
+        const r = 12;
+        const t = 12;
+        const b = 32;
+        const pw = w - l - r;
+        const ph = h - t - b;
+        const now = Date.now();
+
+        const points = historyArray.filter(p => p.time >= now - 60000);
+        const values = points.filter(p => p.value !== null && Number.isFinite(p.value)).map(p => p.value);
+
+        let min = Math.min(0, ...values);
+        let max = Math.max(100, ...values);
+        const pad = Math.max((max - min) * 0.12, 10);
+        min -= pad;
+        max += pad;
+
+        c.font = '11px Segoe UI';
+        c.textAlign = 'right';
+        c.textBaseline = 'middle';
+        for (let i = 0; i <= 4; i++) {
+          const y = t + (ph * i) / 4;
+          const v = max - ((max - min) * i) / 4;
+          c.strokeStyle = '#e1e8e3';
+          c.beginPath();
+          c.moveTo(l, y);
+          c.lineTo(w - r, y);
+          c.stroke();
+          c.fillStyle = '#536864';
+          c.fillText(fmt(v, 0), l - 8, y);
+        }
+
+        c.textAlign = 'center';
+        c.textBaseline = 'top';
+        for (let i = 0; i <= 3; i++) {
+          const x = l + (pw * i) / 3;
+          c.fillStyle = '#536864';
+          c.fillText(i === 3 ? 'şimdi' : `−${60 - i * 20} sn`, x, h - b + 10);
+        }
+
+        c.strokeStyle = '#176c63';
+        c.lineWidth = 2;
+        c.beginPath();
+        let active = false;
+        for (const p of points) {
+          if (p.value === null || !Number.isFinite(p.value)) {
+            active = false;
+            continue;
+          }
+          const x = l + ((p.time - (now - 60000)) / 60000) * pw;
+          const y = t + ((max - p.value) / (max - min)) * ph;
+          if (!active) c.moveTo(x, y);
+          else c.lineTo(x, y);
+          active = true;
+        }
+        c.stroke();
+      }
+
+      // ==========================================================================
+      // DEMO MODU İŞLEYİŞİ (file://)
+      // ==========================================================================
+      function renderDemo() {
+        const available = demoModel.state === 'normal';
+        const unit = $('unit').value;
+        $('status').textContent = demoLabels[demoModel.state];
+        $('weight').textContent = available ? fmt(core.convert(wholeDisplayGrams(demoNet()))[unit], unit === 'g' ? 0 : 3) : '—';
+        $('unitLabel').textContent = unit === 'n' ? 'N' : unit;
+        $('weightNote').textContent = available ? 'Dara: ' + fmt(demoModel.tare, 1) + ' g' : 'Güncel ölçüm yok';
+        $('tare').disabled = !available;
+        $('calibrate').disabled = !available;
+        $('loadValue').textContent = fmt(demoModel.load, 0) + ' g';
+      }
+
+      function sampleDemo() {
+        demoModel.history = core.pushHistory(
+          demoModel.history,
+          { time: Date.now(), value: demoModel.state === 'normal' ? demoNet() : null },
+          121
+        );
+        renderDemo();
+        drawChart(demoModel.history);
+      }
+
+      // ==========================================================================
+      // CANLI ESP32 MODU İŞLEYİŞİ (http:// ve https://)
+      // ==========================================================================
+      function pushLiveGap() {
+        // Art arda gereksiz null noktalarla geçmişi şişirmeden kesintiyi (gap) işaretle
+        const last = liveState.history.length > 0 ? liveState.history[liveState.history.length - 1] : null;
+        if (!last || last.value !== null) {
+          liveState.history = core.pushHistory(liveState.history, { time: Date.now(), value: null }, 121);
+        }
+        liveState.hadGap = true;
+      }
+
+      function renderLive() {
+        const unit = $('unit').value;
+        const hasValidWeight = liveState.grams !== null && Number.isFinite(liveState.grams);
+        $('status').textContent = liveState.statusText;
+        $('weight').textContent = hasValidWeight
+          ? fmt(core.convert(liveState.displayGrams ?? wholeDisplayGrams(liveState.grams))[unit], unit === 'g' ? 0 : 3)
+          : '—';
+        $('unitLabel').textContent = unit === 'n' ? 'N' : unit;
+        $('weightNote').textContent = liveState.noteText;
+
+        // Dara ve kalibrasyon düğmeleri yalnızca sensör sağlıklıysa ve aktif POST/cihaz işlemi yoksa açıktır
+        const canInteract = liveState.sensorOk && !liveState.deviceBusy && !liveState.postInFlight;
+        $('tare').disabled = !canInteract;
+        $('calibrate').disabled = !canInteract;
+      }
+
+      // Zaman aşımı destekli fetch yardımcısı
+      async function fetchWithTimeout(url, options, timeoutMs) {
+        const controller = new AbortController();
+        if (options && options. tracker) {
+          options.tracker.controller = controller;
+        }
+        const timerId = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const fetchOpts = Object.assign({}, options, {
+            cache: 'no-store',
+            signal: controller.signal
+          });
+          delete fetchOpts.tracker;
+          return await fetch(url, fetchOpts);
+        } finally {
+          clearTimeout(timerId);
+        }
+      }
+
+      // GET /api/weight yanıtını doğrular, durum makinesini ve grafiği günceller
+      function handleLiveSnapshot(snap) {
+        const check = core.validateSnapshot(snap);
+        if (!check.valid) {
+          liveState.grams = null;
+          liveState.sensorOk = false;
+          liveState.deviceBusy = false;
+          liveState.statusText = 'Geçersiz veri hatası';
+          liveState.noteText = check.reason || 'Sunucudan bozuk veri geldi';
+          pushLiveGap();
+          renderLive();
+          drawChart(liveState.history);
+          return;
+        }
+
+        // Reboot veya sıra numarası gerilemesi tespiti:
+        // seq === 0 (cihaz yeni açılmış ve henüz örnek okumamış) veya seq < lastSeq (ESP32 yeniden başlamış).
+        // Cihaz yeniden başladığında önceki oturumdan kalan bekleyen (pending) dara/kalibrasyon komutu
+        // yeni oturumdaki aynı tip/op_id'li işlemle (busy veya completed) asla eşlenmemeli, kesin olarak iptal edilmelidir.
+        if (liveState.lastSeq !== null && (snap.seq === 0 || snap.seq < liveState.lastSeq)) {
+          pushLiveGap();
+          liveState.lastSeq = snap.seq === 0 ? 0 : null;
+          if (liveState.pendingOp) {
+            $('feedback').textContent = 'Cihaz yeniden başlatıldı; işlemi tekrarlayın.';
+            liveState.pendingOp = null;
+          }
+        }
+
+        liveState.calibrated = snap.calibrated;
+        liveState.sensorOk = snap.sensor_ok;
+        liveState.deviceBusy = Boolean(snap.busy);
+
+        // Bekleyen (202 Accepted) dara veya kalibrasyon işleminin tamamlanma/hata takibi
+        if (liveState.pendingOp) {
+          const expectedType = liveState.pendingOp.type;
+          const idMatches = liveState.pendingOp.opId === null || snap.op_id === undefined || snap.op_id === liveState.pendingOp.opId;
+
+          if (snap.busy && snap.operation === expectedType) {
+            $('feedback').textContent = expectedType === 'calibrate'
+              ? 'Kalibrasyon örnekleri toplanıyor...'
+              : 'Dara örnekleri toplanıyor...';
+          } else if (!snap.busy && snap.operation === expectedType && idMatches) {
+            if (snap.op_status === 'completed' && snap.sensor_ok) {
+              $('feedback').textContent = expectedType === 'calibrate'
+                ? 'Kalibrasyon tamamlandı ve ESP32 belleğine kaydedildi.'
+                : 'Dara sıfırlandı.';
+              liveState.pendingOp = null;
+            } else if (snap.op_status === 'failed' || !snap.sensor_ok || snap.error) {
+              $('feedback').textContent = snap.error || (expectedType === 'calibrate'
+                ? 'Kalibrasyon başarısız oldu; önceki ayar korundu.'
+                : 'Dara işlemi başarısız oldu.');
+              liveState.pendingOp = null;
+            }
+          } else if (!snap.busy && snap.operation !== expectedType) {
+            $('feedback').textContent = snap.error || 'İşlem tamamlanamadı; lütfen tekrar deneyin.';
+            liveState.pendingOp = null;
+          }
+        }
+
+        // 1. Cihaz meşgulse (açılış sıfırlaması, dara veya kalibrasyon örnek toplama)
+        if (snap.busy) {
+          liveState.grams = null;
+          if (snap.operation === 'startup_zero') {
+            liveState.statusText = 'Açılış sıfırlaması';
+            liveState.noteText = 'Platform boşken sıfır referansı toplanıyor...';
+          } else if (snap.operation === 'tare') {
+            liveState.statusText = 'Dara alınıyor';
+            liveState.noteText = 'Yeni sıfır referansı için örnek toplanıyor...';
+          } else if (snap.operation === 'calibrate') {
+            liveState.statusText = 'Kalibre ediliyor';
+            liveState.noteText = 'Bilinen yük için örnek toplanıyor...';
+          } else {
+            liveState.statusText = 'İşlem sürüyor';
+            liveState.noteText = 'Sensör örnekleri toplanıyor...';
+          }
+          pushLiveGap();
+          renderLive();
+          drawChart(liveState.history);
+          return;
+        }
+
+        // 2. Sensör hazır değil veya hata durumunda
+        if (!snap.sensor_ok || snap.seq === 0) {
+          liveState.grams = null;
+          liveState.statusText = 'Sensör verisi yok';
+          liveState.noteText = snap.error || 'HX711 sensör bağlantısını kontrol edin';
+          pushLiveGap();
+          renderLive();
+          drawChart(liveState.history);
+          return;
+        }
+
+        // 3. Örnek yaşı kontrolü (bayat / stale veri gerçek ölçüm gibi gösterilmez)
+        if (core.isStaleSample(snap.sample_age_ms)) {
+          liveState.grams = null;
+          liveState.statusText = 'Veri güncel değil';
+          liveState.noteText = 'Son sensör örneği zaman aşımına uğradı';
+          pushLiveGap();
+          renderLive();
+          drawChart(liveState.history);
+          return;
+        }
+
+        // 4. Kalibrasyonsuz durum (sensör sağlam; kullanıcı dara ve kalibrasyon yapabilir)
+        if (!snap.calibrated || snap.grams === null) {
+          liveState.grams = null;
+          liveState.statusText = 'Kalibrasyon gerekli';
+          liveState.noteText = snap.error || 'Önce boşken dara alın, sonra bilinen kütle ile kalibre edin';
+          pushLiveGap();
+          renderLive();
+          drawChart(liveState.history);
+          return;
+        }
+
+        // 5. Geçerli, kalibreli ve taze ölçüm:
+        // Yalnızca yeni bir fiziksel ölçüm (seq > lastSeq) geldiyse grafiğe taze örnek eklenir!
+        const isNewSample = liveState.lastSeq === null || snap.seq > liveState.lastSeq || liveState.hadGap;
+        liveState.lastSeq = snap.seq;
+        liveState.grams = snap.grams;
+        liveState.displayGrams = Number.isInteger(snap.display_grams) ? snap.display_grams : null;
+        liveState.statusText = 'Canlı ölçüm';
+        liveState.noteText = `Son örnek: ${Math.round(snap.sample_age_ms)} ms önce (sıra #${snap.seq})`;
+
+        if (isNewSample) {
+          liveState.history = core.pushHistory(
+            liveState.history,
+            { time: Date.now(), value: snap.grams },
+            121
+          );
+          liveState.hadGap = false;
+        }
+
+        renderLive();
+        drawChart(liveState.history);
+      }
+
+      function handleLivePollError(message) {
+        // Kopma durumunda asla sahte demoya geçilmez; ağırlık '—' yapılır ve grafikte gap bırakılır.
+        liveState.grams = null;
+        liveState.sensorOk = false;
+        liveState.deviceBusy = false;
+        liveState.statusText = 'Bağlantı kesik';
+        liveState.noteText = message || 'ESP32 sunucusuna ulaşılamıyor';
+        pushLiveGap();
+        renderLive();
+        drawChart(liveState.history);
+      }
+
+      // Sıralı (çakışmasız) ~500 ms polling döngüsü
+      let pollTimerId = null;
+      function scheduleNextPoll(delayMs = core.POLL_INTERVAL_MS) {
+        if (pollTimerId !== null) {
+          clearTimeout(pollTimerId);
+          pollTimerId = null;
+        }
+        pollTimerId = setTimeout(() => {
+          pollTimerId = null;
+          pollWeightOnce();
+        }, delayMs);
+      }
+
+      async function pollWeightOnce() {
+        if (liveState.pollInFlight || liveState.postInFlight) {
+          scheduleNextPoll(core.POLL_INTERVAL_MS);
+          return;
+        }
+        liveState.pollInFlight = true;
+        const pollGen = liveState.commandGen;
+        const tracker = { controller: null };
+        liveState.activeGetAbort = () => {
+          if (tracker.controller) tracker.controller.abort();
+        };
+
+        try {
+          const res = await fetchWithTimeout('/api/weight', { method: 'GET', tracker }, core.FETCH_TIMEOUT_MS);
+          // Bu GET havadayken bir POST komutu başladıysa eski GET yanıtını yok say
+          if (pollGen !== liveState.commandGen) return;
+
+          if (!res || !res.ok) {
+            handleLivePollError(`Sunucu yanıt hatası (HTTP ${res ? res.status : '?'})`);
+            return;
+          }
+          let data;
+          try {
+            data = await res.json();
+          } catch (_jsonErr) {
+            if (pollGen !== liveState.commandGen) return;
+            handleLivePollError('Sunucudan bozuk JSON yanıtı alındı');
+            return;
+          }
+          if (pollGen !== liveState.commandGen) return;
+          handleLiveSnapshot(data);
+        } catch (_err) {
+          if (pollGen !== liveState.commandGen) return;
+          handleLivePollError('ESP32 bağlantısı zaman aşımına uğradı veya kesildi');
+        } finally {
+          liveState.activeGetAbort = null;
+          liveState.pollInFlight = false;
+          if (!liveState.postInFlight) {
+            scheduleNextPoll(core.POLL_INTERVAL_MS);
+          }
+        }
+      }
+
+      // Canlı POST komutu gönderici (/api/tare ve /api/calibrate)
+      async function sendLiveCommand(type, payload) {
+        if (liveState.postInFlight || liveState.deviceBusy || !liveState.sensorOk) {
+          return;
+        }
+
+        // Havada bekleyen eski GET varsa iptal et ve kuşağı artır (geç yanıt yarışını önler)
+        liveState.commandGen++;
+        if (liveState.activeGetAbort) {
+          liveState.activeGetAbort();
+          liveState.activeGetAbort = null;
+        }
+        if (pollTimerId !== null) {
+          clearTimeout(pollTimerId);
+          pollTimerId = null;
+        }
+
+        liveState.postInFlight = true;
+        liveState.grams = null;
+        $('feedback').textContent = type === 'calibrate'
+          ? 'Kalibrasyon isteği gönderiliyor...'
+          : 'Dara isteği gönderiliyor...';
+        renderLive();
+
+        const url = type === 'calibrate' ? '/api/calibrate' : '/api/tare';
+        const fetchOptions = {
+          method: 'POST',
+          headers: payload ? { 'Content-Type': 'application/json' } : undefined,
+          body: payload ? JSON.stringify(payload) : undefined
+        };
+
+        try {
+          const res = await fetchWithTimeout(url, fetchOptions, core.FETCH_TIMEOUT_MS);
+          let data = null;
+          try {
+            data = await res.json();
+          } catch (_e) {
+            data = null;
+          }
+
+          if (!res || !res.ok || (data && data.ok === false)) {
+            const errMsg = (data && typeof data.error === 'string' && data.error)
+              ? data.error
+              : `İşlem reddedildi (HTTP ${res ? res.status : '?'})`;
+            $('feedback').textContent = errMsg;
+            liveState.pendingOp = null;
+            liveState.deviceBusy = false;
+            return;
+          }
+
+          // 202 Accepted veya busy: true -> işlem henüz bitmedi, loop içinde örnek toplanıyor!
+          if (res.status === 202 || (data && (data.status === 'accepted' || data.busy === true))) {
+            liveState.deviceBusy = true;
+            liveState.pendingOp = {
+              type,
+              opId: (data && typeof data.op_id === 'number') ? data.op_id : null
+            };
+            liveState.statusText = type === 'calibrate' ? 'Kalibre ediliyor' : 'Dara alınıyor';
+            liveState.noteText = 'Sensör örnekleri toplanıyor...';
+            $('feedback').textContent = type === 'calibrate'
+              ? 'Kalibrasyon kabul edildi, sensör örnekleri toplanıyor...'
+              : 'Dara kabul edildi, sensör örnekleri toplanıyor...';
+          } else {
+            // Senkron 200 tamamlanma durumu
+            liveState.pendingOp = null;
+            liveState.deviceBusy = false;
+            $('feedback').textContent = type === 'calibrate'
+              ? 'Kalibrasyon tamamlandı ve kaydedildi.'
+              : 'Dara sıfırlandı.';
+          }
+        } catch (_err) {
+          $('feedback').textContent = 'İstek gönderilemedi; ESP32 bağlantısını kontrol edin.';
+          liveState.pendingOp = null;
+          liveState.deviceBusy = false;
+        } finally {
+          liveState.postInFlight = false;
+          renderLive();
+          scheduleNextPoll(core.POLL_INTERVAL_MS);
+        }
+      }
+
+      // ==========================================================================
+      // ORTAK OLAY DİNLEYİCİLERİ VE BAŞLATMA
+      // ==========================================================================
+      $('unit').addEventListener('change', () => {
+        if (activeMode === 'live') renderLive();
+        else renderDemo();
+      });
+
+      $('tare').addEventListener('click', () => {
+        if (activeMode === 'live') {
+          sendLiveCommand('tare', null);
+          return;
+        }
+        if (demoModel.state !== 'normal') return;
+        demoModel.tare = core.tare(demoRaw(), demoModel.rawZero, demoModel.factor);
+        sampleDemo();
+      });
+
+      $('calibrate').addEventListener('click', () => {
+        if (activeMode === 'live') {
+          const knownG = core.validateKnownMass($('known').value);
+          if (knownG === null) {
+            $('feedback').textContent = `0 ile ${core.MAX_CAPACITY_G} g arasında geçerli bir bilinen kütle girin.`;
+            return;
+          }
+          sendLiveCommand('calibrate', { known_g: knownG });
+          return;
+        }
+        if (demoModel.state !== 'normal') return;
+        const factor = core.calibrate($('known').value, demoRaw(), demoModel.rawZero);
+        if (factor === null) {
+          $('feedback').textContent = 'Pozitif ve geçerli bir kütle girin; demo yükü sıfır olmamalı.';
+          return;
+        }
+        demoModel.factor = factor;
+        demoModel.tare = 0;
+        $('feedback').textContent = 'Demo katsayısı güncellendi; dara sıfırlandı.';
+        sampleDemo();
+      });
+
+      window.addEventListener('resize', () => {
+        drawChart(activeMode === 'live' ? liveState.history : demoModel.history);
+      });
+
+      if (activeMode === 'live') {
+        // Gerçek ESP32 modunda demo yük ve demo durum kontrollerini gizle, rozet ve açıklamaları güncelle
+        $('modeBadge').textContent = 'Canlı — ESP32 bağlantısı';
+        $('modeBadge').className = 'live-badge';
+        if ($('brandSub')) $('brandSub').textContent = 'ESP32 Wi-Fi yerel ölçüm arayüzü';
+        if ($('pageCaption')) $('pageCaption').textContent = 'HX711 üzerinden canlı yük ve net ağırlık';
+        if ($('demoLoadPanel')) $('demoLoadPanel').hidden = true;
+        if ($('demoStateSection')) $('demoStateSection').hidden = true;
+        if ($('controlsGrid')) $('controlsGrid').className = 'controls single-col';
+        if ($('calibrationDetails')) {
+          $('calibrationDetails').open = true;
+          $('calibrationDetails').className = 'standalone';
+        }
+        if ($('calibrationSummary')) $('calibrationSummary').textContent = 'Cihaz kalibrasyonu (ESP32 NVS)';
+        if ($('calibrationHelp')) {
+          $('calibrationHelp').textContent = 'Önce platformu boşaltıp Dara al düğmesiyle boş referansı sıfırlayın. Sonra bilinen kütleyi (0–5000 g) platforma koyup değerini girerek Kalibre et düğmesine basın.';
+        }
+        if ($('footerNote')) {
+          $('footerNote').textContent = 'Canlı ESP32 ölçüm modu. Kalibrasyon katsayısı doğrulandığında ESP32 NVS belleğine kaydedilir; dara ise geçici oturum ofsetidir.';
+        }
+
+        renderLive();
+        drawChart(liveState.history);
+        pollWeightOnce();
+      } else {
+        // Dosyadan (file://) açıldığında çevrimdışı demo davranışını koru
+        if ($('modeBadge')) {
+          $('modeBadge').textContent = 'Demo — gerçek ölçüm değil';
+          $('modeBadge').className = 'demo';
+        }
+        $('load').addEventListener('input', e => {
+          demoModel.load = Number(e.target.value);
+          renderDemo();
+        });
+        document.querySelectorAll('[data-load]').forEach(b => {
+          b.addEventListener('click', () => {
+            demoModel.load = Number(b.dataset.load);
+            $('load').value = demoModel.load;
+            renderDemo();
+          });
+        });
+        $('state').addEventListener('change', e => {
+          if (!core.validState(e.target.value)) return;
+          demoModel.state = e.target.value;
+          sampleDemo();
+        });
+
+        sampleDemo();
+        setInterval(sampleDemo, 500);
+      }
+    })();
+  </script>
+</body>
+</html>

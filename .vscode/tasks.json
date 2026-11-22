@@ -1,0 +1,27 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Terazi: HX711 testini derle",
+      "type": "process",
+      "command": "${env:USERPROFILE}/AppData/Local/Programs/Python/Python312/Scripts/pio.exe",
+      "args": ["run", "-d", "${workspaceFolder}", "-e", "hx711_raw"],
+      "group": {"kind": "build", "isDefault": true},
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Terazi: HX711 testini yukle",
+      "type": "process",
+      "command": "${env:USERPROFILE}/AppData/Local/Programs/Python/Python312/Scripts/pio.exe",
+      "args": ["run", "-d", "${workspaceFolder}", "-e", "hx711_raw", "-t", "upload"],
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Terazi: Seri monitor 115200",
+      "type": "process",
+      "command": "${env:USERPROFILE}/AppData/Local/Programs/Python/Python312/Scripts/pio.exe",
+      "args": ["device", "monitor", "-b", "115200"],
+      "problemMatcher": []
+    }
+  ]
+}

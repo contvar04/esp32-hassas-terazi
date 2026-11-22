@@ -1,0 +1,21 @@
+✔ gramı kg ve Newton birimlerine dönüştürür (1.4151ms)
+✔ ham veriden net kütle ve dara hesaplar (0.1009ms)
+✔ kalibrasyon işaretli sensör kazancını destekler (0.0808ms)
+✔ geçersiz kütle ve yüksüz kalibrasyonu reddeder (0.0854ms)
+✔ geçersiz durumu reddeder (0.302ms)
+✔ geçmiş en fazla belirlenen sayıda örnek tutar (1.038ms)
+✔ protokole göre DEMO ve CANLI modu doğru ayırır, demo kontrollerini canlı modda gizler (60.5994ms)
+✔ canlı snapshot doğrulaması tür, finite, stale, negatif net ve birim dönüşümünü denetler (4.13ms)
+✔ g, kg ve N göstergeleri ortak ESP32 gramını, grafik ise kesirli ölçümü kullanır (4.0006ms)
+✔ tekrarlı seq, stale veri, sensör yok, kalibrasyonsuz, kopma, reboot seq sıfırlama ve reconnect grafik/durum geçişlerini yönetir (5.3297ms)
+✔ reboot veya sıra gerilemesinde bekleyen (pending) dara/kalibrasyon komutunu kesin iptal eder ve yeni cihaz işlemiyle eşlemez (5.3187ms)
+✔ sıralı polling çakışmaz, timeout uygular; POST 202 yanıtını bitmiş başarı sanmaz ve GET sonucunu bekler (7.4045ms)
+✔ PROGMEM HTML üreticisi güncellik kontrolünü ve C++ raw literal delimiter güvenliğini doğrular (20.6438ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 199.5644
