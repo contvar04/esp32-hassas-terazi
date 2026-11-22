@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wheatstone Köprülü Hassas Terazi Yapımı: ESP32 ve HX711</title>
+<meta name="description" content="ESP32, HX711 ve 5 kg yük hücresi ile Wheatstone köprülü dijital hassas terazi yapımı. Bağlantılar, PlatformIO kurulumu ve kalibrasyon.">
+<link rel="canonical" href="https://contvar04.github.io/esp32-hassas-terazi/">
+<link rel="alternate" hreflang="tr" href="https://contvar04.github.io/esp32-hassas-terazi/">
+<link rel="alternate" hreflang="en" href="https://contvar04.github.io/esp32-hassas-terazi/en/">
+<link rel="alternate" hreflang="x-default" href="https://contvar04.github.io/esp32-hassas-terazi/">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><nav aria-label="Dil"><a href="https://contvar04.github.io/esp32-hassas-terazi/" hreflang="tr" lang="tr">Türkçe</a> · <a href="https://contvar04.github.io/esp32-hassas-terazi/en/" hreflang="en" lang="en">English</a></nav></header>
+<main>
+<p class="label">ESP32 / HX711 / 20×4 LCD</p>
+<h1>Wheatstone Köprülü Hassas Terazi Yapımı: ESP32 ve HX711</h1>
+<p>ESP32, HX711 ve 5 kg yük hücresi ile Wheatstone köprülü dijital hassas terazi yapımı. Bağlantılar, PlatformIO kurulumu ve kalibrasyon. ESP32 kendi Wi-Fi ağını açar ve canlı ölçümü tablet tarayıcısında gösterir. İnternet gerekmez.</p>
+<p><a class="button" href="https://github.com/contvar04/esp32-hassas-terazi">Kaynak kodu GitHub’da aç</a> <a href="https://github.com/contvar04/esp32-hassas-terazi/blob/main/README.md">Kurulum rehberi</a></p>
+<section><h2>Parçalar ve bağlantılar</h2>
+<p>Tam Wheatstone köprülü, dört telli yük hücresi; HX711; ESP32; 20×4 I²C LCD; seviye dönüştürücü ve dara düğmesi. 5 kg hücrenin nominal kapasitesidir; bu, terazi doğruluğu garantisi değildir.</p>
+<dl><dt>HX711 DOUT / SCK</dt><dd>GPIO16 / GPIO4</dd><dt>LCD SDA / SCL</dt><dd>GPIO21 / GPIO22 · I²C <code>0x27</code></dd><dt>Dara düğmesi</dt><dd>GPIO27 → GND</dd></dl>
+<p><a href="https://github.com/contvar04/esp32-hassas-terazi/blob/main/firmware/README.md">Besleme, seviye dönüşümü ve ayrıntılı bağlantılar</a></p></section>
+<section><h2>Kurulum ve kalibrasyon</h2>
+<ol><li>Parola şablonunu <code>firmware/wifi_local.example.h</code> → <code>firmware/wifi_local.h</code>. Yerel Wi-Fi parolanı ayarla.</li>
+<li>PlatformIO ile derle: <code>pio run -d firmware -e terazi_main</code>.</li>
+<li>Açılış darası için platformu boş bırak. HassasTerazi ağına bağlan ve tarayıcıda 192.168.4.1 adresini aç.</li>
+<li>Kütlesi bilinen bir cisimle kalibre et, ardından farklı bir yükle sonucu kontrol et.</li></ol></section>
+<section><h2>Wheatstone köprüsü nasıl çalışıyor?</h2>
+<p>Yük, köprü kollarındaki gerinim ölçerlerin direncini değiştirir. HX711 köprünün diferansiyel çıkışını sayısallaştırır; ESP32 boş referansı çıkarıp kalibrasyon katsayısıyla sonucu grama çevirir.</p>
+<p><a href="https://github.com/contvar04/esp32-hassas-terazi/tree/main/simulasyon">Köprü simülasyonu ve test çıktıları</a> · <a href="https://github.com/contvar04/esp32-hassas-terazi/tree/main/examples">Sensör ve LCD teşhis örnekleri</a></p></section>
+</main>
+</body>
+</html>

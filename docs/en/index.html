@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ESP32 HX711 Precision Scale: Build a Wheatstone Bridge Digital Scale</title>
+<meta name="description" content="Build a digital weighing scale with an ESP32, HX711, and 5 kg Wheatstone bridge load cell. Wiring, PlatformIO setup, LCD, and calibration.">
+<link rel="canonical" href="https://contvar04.github.io/esp32-hassas-terazi/en/">
+<link rel="alternate" hreflang="tr" href="https://contvar04.github.io/esp32-hassas-terazi/">
+<link rel="alternate" hreflang="en" href="https://contvar04.github.io/esp32-hassas-terazi/en/">
+<link rel="alternate" hreflang="x-default" href="https://contvar04.github.io/esp32-hassas-terazi/">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<header><nav aria-label="Language"><a href="https://contvar04.github.io/esp32-hassas-terazi/" hreflang="tr" lang="tr">Türkçe</a> · <a href="https://contvar04.github.io/esp32-hassas-terazi/en/" hreflang="en" lang="en">English</a></nav></header>
+<main>
+<p class="label">ESP32 / HX711 / 20×4 LCD</p>
+<h1>ESP32 HX711 Precision Scale: Build a Wheatstone Bridge Digital Scale</h1>
+<p>Build a digital weighing scale with an ESP32, HX711, and 5 kg Wheatstone bridge load cell. Wiring, PlatformIO setup, LCD, and calibration. The ESP32 hosts its own Wi-Fi network and displays live readings in a tablet browser. No internet connection is needed.</p>
+<p><a class="button" href="https://github.com/contvar04/esp32-hassas-terazi">View source code on GitHub</a> <a href="https://github.com/contvar04/esp32-hassas-terazi/blob/main/README.en.md">Build guide</a></p>
+<section><h2>Parts and wiring</h2>
+<p>Four-wire full-bridge load cell, HX711, ESP32, 20×4 I²C LCD, bidirectional level shifter, and tare button. 5 kg is the load cell’s nominal rating, not an accuracy guarantee.</p>
+<dl><dt>HX711 DOUT / SCK</dt><dd>GPIO16 / GPIO4</dd><dt>LCD SDA / SCL</dt><dd>GPIO21 / GPIO22 · I²C <code>0x27</code></dd><dt>Tare button</dt><dd>GPIO27 → GND</dd></dl>
+<p><a href="https://github.com/contvar04/esp32-hassas-terazi/blob/main/firmware/README.md">Power, level shifting, and full wiring</a></p></section>
+<section><h2>Build and calibrate</h2>
+<ol><li>Copy the password template <code>firmware/wifi_local.example.h</code> → <code>firmware/wifi_local.h</code>. Set your local Wi-Fi password.</li>
+<li>Build with PlatformIO: <code>pio run -d firmware -e terazi_main</code>.</li>
+<li>Leave the platform empty for startup tare. Join the HassasTerazi network and open 192.168.4.1 in your browser.</li>
+<li>Calibrate with a known mass, then check against a different known mass.</li></ol></section>
+<section><h2>How the Wheatstone bridge works</h2>
+<p>Load changes the resistance of the strain gauges in the bridge. The HX711 digitizes the differential output, and the ESP32 subtracts the zero reference and converts the result to grams using calibration.</p>
+<p><a href="https://github.com/contvar04/esp32-hassas-terazi/tree/main/simulasyon">Bridge simulation and test logs</a> · <a href="https://github.com/contvar04/esp32-hassas-terazi/tree/main/examples">Sensor and LCD diagnostics</a></p></section>
+</main>
+</body>
+</html>
