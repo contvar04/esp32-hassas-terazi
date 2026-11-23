@@ -6,6 +6,8 @@
 
 *ESP32 ve HX711 tabanlı Wheatstone köprülü terazi: iki ekranda da 68 g.*
 
+**Lisans:** Projenin özgün yazılımı (firmware, tablet arayüzü ve simülasyon kodu) [MIT lisansı](LICENSE) ile sunulur. Üçüncü taraf bileşenler kendi lisanslarına tabidir. 68 g prototip fotoğrafı MIT kapsamı dışındadır.
+
 5 kg nominal kapasiteli bir yük hücresi, HX711 ve ESP32 kullanan Ölçme ve Enstrümantasyon dersi prototipi. ESP32 ölçümü 20×4 I²C LCD'de gösterir ve kendi yerel Wi-Fi ağı üzerinden tablet tarayıcısına canlı ölçüm ve grafik sunar. İnternet gerekmez.
 
 - **Donanım, pinler ve kalibrasyon:** [Firmware rehberi](firmware/README.md)

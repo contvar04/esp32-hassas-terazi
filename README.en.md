@@ -6,6 +6,8 @@
 
 *ESP32 and HX711 Wheatstone bridge scale: both displays read 68 g.*
 
+**License:** The project's original software (firmware, tablet dashboard, and simulation code) is available under the [MIT License](LICENSE). Third-party components retain their own licenses. The 68 g prototype photo is not covered by MIT.
+
 Build an ESP32 digital weighing scale using a four-wire, full Wheatstone bridge load cell rated for 5 kg and an HX711 amplifier/ADC. The scale displays live readings on a 20×4 I²C LCD and serves a live chart and calibration controls to a tablet browser over its own Wi-Fi network. No internet connection is required to use the scale.
 
 ## Hardware and wiring
