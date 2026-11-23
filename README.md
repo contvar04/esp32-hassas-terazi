@@ -2,6 +2,10 @@
 
 [English build guide: ESP32 Wheatstone Bridge Precision Scale](README.en.md)
 
+![Gerçek terazi prototipi: LCD ve tablet aynı anda 68 g gösteriyor.](docs/assets/prototype-68g.jpg)
+
+*ESP32 ve HX711 tabanlı Wheatstone köprülü terazi: iki ekranda da 68 g.*
+
 5 kg nominal kapasiteli bir yük hücresi, HX711 ve ESP32 kullanan Ölçme ve Enstrümantasyon dersi prototipi. ESP32 ölçümü 20×4 I²C LCD'de gösterir ve kendi yerel Wi-Fi ağı üzerinden tablet tarayıcısına canlı ölçüm ve grafik sunar. İnternet gerekmez.
 
 - **Donanım, pinler ve kalibrasyon:** [Firmware rehberi](firmware/README.md)

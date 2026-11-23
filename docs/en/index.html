@@ -18,6 +18,10 @@
 <h1>ESP32 HX711 Precision Scale: Build a Wheatstone Bridge Digital Scale</h1>
 <p>Build a digital weighing scale with an ESP32, HX711, and 5 kg Wheatstone bridge load cell. Wiring, PlatformIO setup, LCD, and calibration. The ESP32 hosts its own Wi-Fi network and displays live readings in a tablet browser. No internet connection is needed.</p>
 <p><a class="button" href="https://github.com/contvar04/esp32-hassas-terazi">View source code on GitHub</a> <a href="https://github.com/contvar04/esp32-hassas-terazi/blob/main/README.en.md">Build guide</a></p>
+<figure class="prototype">
+<img src="../assets/prototype-68g.jpg" width="1280" height="660" alt="Scale platform and circuit, with both the LCD and tablet displaying 68 g.">
+<figcaption>Working prototype: the LCD and tablet dashboard both display 68 g.</figcaption>
+</figure>
 <section><h2>Parts and wiring</h2>
 <p>Four-wire full-bridge load cell, HX711, ESP32, 20×4 I²C LCD, bidirectional level shifter, and tare button. 5 kg is the load cell’s nominal rating, not an accuracy guarantee.</p>
 <dl><dt>HX711 DOUT / SCK</dt><dd>GPIO16 / GPIO4</dd><dt>LCD SDA / SCL</dt><dd>GPIO21 / GPIO22 · I²C <code>0x27</code></dd><dt>Tare button</dt><dd>GPIO27 → GND</dd></dl>

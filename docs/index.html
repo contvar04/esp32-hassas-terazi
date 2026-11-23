@@ -18,6 +18,10 @@
 <h1>Wheatstone Köprülü Hassas Terazi Yapımı: ESP32 ve HX711</h1>
 <p>ESP32, HX711 ve 5 kg yük hücresi ile Wheatstone köprülü dijital hassas terazi yapımı. Bağlantılar, PlatformIO kurulumu ve kalibrasyon. ESP32 kendi Wi-Fi ağını açar ve canlı ölçümü tablet tarayıcısında gösterir. İnternet gerekmez.</p>
 <p><a class="button" href="https://github.com/contvar04/esp32-hassas-terazi">Kaynak kodu GitHub’da aç</a> <a href="https://github.com/contvar04/esp32-hassas-terazi/blob/main/README.md">Kurulum rehberi</a></p>
+<figure class="prototype">
+<img src="assets/prototype-68g.jpg" width="1280" height="660" alt="Tartım platformu ve devre; LCD ile tablet aynı anda 68 g gösteriyor.">
+<figcaption>Çalışan prototip: LCD ve tablet arayüzü aynı anda 68 g gösteriyor.</figcaption>
+</figure>
 <section><h2>Parçalar ve bağlantılar</h2>
 <p>Tam Wheatstone köprülü, dört telli yük hücresi; HX711; ESP32; 20×4 I²C LCD; seviye dönüştürücü ve dara düğmesi. 5 kg hücrenin nominal kapasitesidir; bu, terazi doğruluğu garantisi değildir.</p>
 <dl><dt>HX711 DOUT / SCK</dt><dd>GPIO16 / GPIO4</dd><dt>LCD SDA / SCL</dt><dd>GPIO21 / GPIO22 · I²C <code>0x27</code></dd><dt>Dara düğmesi</dt><dd>GPIO27 → GND</dd></dl>
